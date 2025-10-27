@@ -1,45 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, Alert, Text } from 'react-native';
-import { FAB, Card, IconButton, ActivityIndicator } from 'react-native-paper';
-import { getTransactions, deleteTransaction } from '../services/transactionService';
+import React, { useState, useEffect } from 'react'; //useState and useEffect hooks
+import { View, StyleSheet, FlatList, Alert, Text } from 'react-native'; // View, StyleSheet, FlatList, Alert, Text components 
+import { FAB, Card, IconButton, ActivityIndicator } from 'react-native-paper';  // FAB: Floating Action Button; Card: For displaying transaction details; IconButton: For edit/delete icons; ActivityIndicator: For loading spinner
+import { getTransactions, deleteTransaction } from '../services/transactionService';  // Service functions to get and delete transactions
 
-export default function TransactionsScreen({ navigation }) {
-  const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function TransactionsScreen({ navigation }) {  // Main component for Transactions Screen
+  const [transactions, setTransactions] = useState([]); // State to hold the list of transactions
+  const [loading, setLoading] = useState(true); // State to manage loading indicator
 
-  const loadTransactions = async () => {
-    try {
-      const data = await getTransactions();
-      setTransactions(data);
-    } catch (error) {
-      Alert.alert('Error', 'Failed to load transactions');
+  const loadTransactions = async () => {  // Function to load transactions from the service
+    try { // Try to fetch transactions
+      const data = await getTransactions(); // Call to service: Get transactions
+      setTransactions(data);  // Update state with fetched transactions
+    } catch (error) { // Error handling: Show alert if fetching fails
+      Alert.alert('Error', 'Failed to load transactions');  // Show error alert
     } finally {
-      setLoading(false);
+      setLoading(false);  // Reset loading state after attempt
     }
   };
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      loadTransactions();
+  useEffect(() => { // useEffect hook to load transactions on component mount and when screen is focused
+    const unsubscribe = navigation.addListener('focus', () => { // Listener for screen focus
+      loadTransactions(); // Load transactions when screen is focused
     });
-    return unsubscribe;
-  }, [navigation]);
+    return unsubscribe; // Cleanup the listener on unmount
+  }, [navigation]);  // Dependency array with navigation
 
-  const handleDelete = (id) => {
-    Alert.alert(
+  const handleDelete = (id) => {  // Function to handle transaction deletion
+    Alert.alert(  // Confirmation alert before deletion
       'Delete Transaction',
       'Are you sure you want to delete this transaction?',
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: 'Cancel', style: 'cancel' },  // Cancel button
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: async () => {
-            try {
-              await deleteTransaction(id);
-              loadTransactions();
-            } catch (error) {
-              Alert.alert('Error', 'Failed to delete transaction');
+          onPress: async () => {  // On confirm, delete the transaction
+            try { // Try to delete transaction
+              await deleteTransaction(id);  // Call to service: Delete transaction by id
+              loadTransactions(); // Reload transactions after deletion
+            } catch (error) { // Error handling: Show alert if deletion fails
+              Alert.alert('Error', 'Failed to delete transaction'); // Show error alert
             }
           },
         },
@@ -47,20 +47,21 @@ export default function TransactionsScreen({ navigation }) {
     );
   };
 
-  const renderTransaction = ({ item }) => (
-    <Card style={styles.card}>
+  const renderTransaction = ({ item }) => ( // Function to render each transaction item
+    <Card style={styles.card}>  
       <Card.Content>
-        <View style={styles.transactionHeader}>
-          <View style={styles.transactionInfo}>
-            <Text style={styles.description}>{item.description}</Text>
-            <Text style={styles.category}>
-              {item.categoryIcon} {item.categoryName}
+        <View style={styles.transactionHeader}> {/* Transaction header container */}
+          <View style={styles.transactionInfo}> {/* Transaction info container */}
+            <Text style={styles.description}>{item.description}</Text>  {/* Transaction description */}
+            <Text style={styles.category}>  {/* Transaction category with icon */}
+              {item.categoryIcon} {item.categoryName}  {/* Display category icon and name */}
             </Text>
-            <Text style={styles.date}>{item.date}</Text>
+            <Text style={styles.date}>{item.date}</Text>  {/* Transaction date */}
           </View>
-          <View style={styles.transactionActions}>
+          <View style={styles.transactionActions}>  {/* Transaction actions container */}
+            {/* Display transaction amount */}
             <Text 
-              style={[
+              style={[  
                 styles.amount,
                 item.type === 'income' ? styles.incomeAmount : styles.expenseAmount
               ]}
@@ -85,9 +86,10 @@ export default function TransactionsScreen({ navigation }) {
     </Card>
   );
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
+  if (loading) {  // Show loading indicator while transactions are being loaded
+    return (  // Loading state return
+      //
+      <View style={styles.loadingContainer}>  
         <ActivityIndicator size="large" color="#667eea" />
       </View>
     );
@@ -95,9 +97,9 @@ export default function TransactionsScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {transactions.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No transactions yet</Text>
+      {transactions.length === 0 ? (  // Show empty state if no transactions are available
+        <View style={styles.emptyContainer}>  
+          <Text style={styles.emptyText}>No transactions yet</Text> 
           <Text style={styles.emptySubtext}>Tap the + button to add your first transaction</Text>
         </View>
       ) : (
@@ -117,7 +119,7 @@ export default function TransactionsScreen({ navigation }) {
     </View>
   );
 }
-
+// Style definitions for TransactionsScreen component
 const styles = StyleSheet.create({
   container: {
     flex: 1,

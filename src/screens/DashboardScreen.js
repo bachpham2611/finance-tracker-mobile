@@ -1,44 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
-import { Card, ActivityIndicator } from 'react-native-paper';
-import { Text } from 'react-native';
-import { getStatistics } from '../services/transactionService';
+import React, { useState, useEffect } from 'react'; //useState, useEffect: React hooks for state management and side effects
+import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';  // View: Container for layout; StyleSheet: For styling components; ScrollView: For scrollable content; RefreshControl: For pull-to-refresh functionality.
+import { Card, ActivityIndicator } from 'react-native-paper'; // Card: For displaying information in card format; ActivityIndicator: For showing loading spinner.
+import { Text } from 'react-native';  // Text: To display text elements.
+import { getStatistics } from '../services/transactionService'; // getStatistics: Function to fetch dashboard statistics from transaction service.
 
-export default function DashboardScreen() {
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
+export default function DashboardScreen() { // export default function, define the main component
+  const [stats, setStats] = useState(null); // stats state to store fetched statistics data
+  const [loading, setLoading] = useState(true); // 'loading' is true initially, controls the display of the full-screen spinner
+  const [refreshing, setRefreshing] = useState(false);  // 'refreshing' controls the native RefreshControl spinner during a pull-to-refresh action
 
-  const loadStats = async () => {
-    try {
-      const data = await getStatistics();
-      setStats(data);
-    } catch (error) {
+  const loadStats = async () => { // Function to load statistics data
+    try { 
+      const data = await getStatistics(); // Call to service: Fetch the pre-calculated financial statistics
+      setStats(data); // Update state with fetched data
+    } catch (error) { // Error handling: Log the error if data fetching fails
       console.error('Error loading stats:', error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
+    } finally { // Final block to ensure loading states are reset
+      setLoading(false); // Turn off the initial full-screen loader
+      setRefreshing(false); // Turn off the pull-to-refresh loader
     }
   };
 
-  useEffect(() => {
-    loadStats();
+  useEffect(() => { // useEffect hook to load stats on component mount
+    loadStats();  // Load stats on component mount
   }, []);
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    loadStats();
+  const onRefresh = () => { // Function to handle pull-to-refresh action
+    setRefreshing(true);  // Set refreshing state to true to show RefreshControl spinner
+    loadStats();  // Reload stats data
   };
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
+  if (loading) {  // Show full-screen loading indicator while data is being fetched initially
+    return (  // Return loading view
+      <View style={styles.loadingContainer}>  
         <ActivityIndicator size="large" />
       </View>
     );
   }
 
-  return (
+  return (  // Main return for DashboardScreen component
+    // ScrollView: Allows the dashboard to scroll if the content is too long
     <ScrollView 
       style={styles.container}
       refreshControl={
@@ -100,6 +101,7 @@ export default function DashboardScreen() {
   );
 }
 
+// Style definitions for DashboardScreen component
 const styles = StyleSheet.create({
   container: {
     flex: 1,

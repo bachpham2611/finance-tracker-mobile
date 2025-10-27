@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, Platform, Alert } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
-import { Text } from 'react-native';
-import { loginUser } from '../services/authService';
+import React, { useState } from 'react';  // useState: Used to manage the local state of the component (email, password, loading status).
+import { View, StyleSheet, KeyboardAvoidingView, Platform, Alert } from 'react-native'; // View: Container for layout; StyleSheet: For styling components; KeyboardAvoidingView: To adjust UI when keyboard appears; Platform: To handle platform-specific code; Alert: To show alert dialogs.
+import { TextInput, Button } from 'react-native-paper'; // TextInput: For user input fields; Button: For clickable buttons.
+import { Text } from 'react-native';  // Text: To display text elements.
+import { loginUser } from '../services/authService';  // loginUser: Function to handle user login via authentication service.
 
-export default function LoginScreen({ navigation }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+export default function LoginScreen({ navigation }) { // export default function, define the main component, accepting 'navigation' prop to handle screen transitions
+  const [email, setEmail] = useState('');  // email state to store user input for email
+  const [password, setPassword] = useState(''); // password state to store user input for password
+  const [loading, setLoading] = useState(false);  // loading state to indicate whether a login request is in progress
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
+  const handleLogin = async () => { // Function to handle login button press
+    if (!email || !password) {  
+      Alert.alert('Error', 'Please fill in all fields');  
       return;
     }
 
@@ -31,10 +31,12 @@ export default function LoginScreen({ navigation }) {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
+      {/* Application title */}
       <View style={styles.content}>
         <Text style={styles.title}>💰 Finance Tracker</Text>
         <Text style={styles.subtitle}>Login to your account</Text>
 
+        {/* Email input field (React Native Paper Component) */}
         <TextInput
           label="Email"
           value={email}
@@ -45,6 +47,7 @@ export default function LoginScreen({ navigation }) {
           style={styles.input}
         />
 
+        {/* Password input field (React Native Paper Component) */}
         <TextInput
           label="Password"
           value={password}
@@ -54,6 +57,7 @@ export default function LoginScreen({ navigation }) {
           style={styles.input}
         />
 
+        {/* Login button (React Native Paper Component) */}
         <Button 
           mode="contained" 
           onPress={handleLogin}
@@ -64,6 +68,7 @@ export default function LoginScreen({ navigation }) {
           Login
         </Button>
 
+        {/* Navigation to Register screen */}
         <Button 
           mode="text" 
           onPress={() => navigation.navigate('Register')}
@@ -76,7 +81,8 @@ export default function LoginScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+{/* Style Login Screen */}
+const styles = StyleSheet.create({  
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
