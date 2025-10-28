@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Alert, Platform, Text } from 'react-native';
-import { TextInput, Button, SegmentedButtons } from 'react-native-paper';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { addTransaction, updateTransaction } from '../services/transactionService';
-import { getCategories } from '../services/categoryService';
+import React, { useState, useEffect } from 'react'; // useState and useEffect hooks
+import { View, StyleSheet, ScrollView, Alert, Platform, Text } from 'react-native'; // View, StyleSheet, ScrollView, Alert, Platform, Text components
+import { TextInput, Button, SegmentedButtons } from 'react-native-paper'; // TextInput: For user input; Button: For various buttons; SegmentedButtons: For type selection
+import DateTimePicker from '@react-native-community/datetimepicker';  // DateTimePicker component for selecting date
+import { addTransaction, updateTransaction } from '../services/transactionService'; // Service functions to add and update transactions
+import { getCategories } from '../services/categoryService'; // Service function to get categories
 
-export default function AddTransactionScreen({ navigation, route }) {
-  const editTransaction = route.params?.transaction;
-  const isEditing = !!editTransaction;
+export default function AddTransactionScreen({ navigation, route }) { // Main component for Add/Edit Transaction Screen
+  const editTransaction = route.params?.transaction;  // Get transaction to edit from route params (if any)
+  const isEditing = !!editTransaction;  // Boolean flag to check if editing mode
 
-  const [amount, setAmount] = useState(editTransaction?.amount?.toString() || '');
-  const [description, setDescription] = useState(editTransaction?.description || '');
-  const [type, setType] = useState(editTransaction?.type || 'expense');
-  const [date, setDate] = useState(editTransaction ? new Date(editTransaction.date) : new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [amount, setAmount] = useState(editTransaction?.amount?.toString() || '');  // State for transaction amount
+  const [description, setDescription] = useState(editTransaction?.description || ''); // State for transaction description
+  const [type, setType] = useState(editTransaction?.type || 'expense'); // State for transaction type (expense/income)
+  const [date, setDate] = useState(editTransaction ? new Date(editTransaction.date) : new Date());  // State for transaction date
+  const [showDatePicker, setShowDatePicker] = useState(false);  // State to control date picker visibility
+  const [selectedCategory, setSelectedCategory] = useState(null); // State for selected category
   const [categories, setCategories] = useState([]);  // Initialize as empty array
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);  // State to manage loading indicator
 
-  useEffect(() => {
+  useEffect(() => { // useEffect hook to load categories on component mount
     // Load categories
     const loadCategories = () => {
       try {

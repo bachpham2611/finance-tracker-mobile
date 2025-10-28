@@ -1,85 +1,87 @@
-import React, { useState, useRef } from 'react';
-import { View, StyleSheet, FlatList, KeyboardAvoidingView, Platform, Text } from 'react-native';
-import { TextInput, IconButton, Card, Chip } from 'react-native-paper';
-import { processChatMessage } from '../services/chatbotService';
+import React, { useState, useRef } from 'react';  // useState and useRef hooks
+import { View, StyleSheet, FlatList, KeyboardAvoidingView, Platform, Text } from 'react-native';  // View, StyleSheet, FlatList, KeyboardAvoidingView, Platform, Text components
+import { TextInput, IconButton, Card, Chip } from 'react-native-paper'; // TextInput: For user input; IconButton: For send button; Card: For displaying messages; Chip: For quick message buttons
+import { processChatMessage } from '../services/chatbotService';  // Service function to process chat messages
 
-export default function ChatbotScreen() {
-  const [messages, setMessages] = useState([
+export default function ChatbotScreen() { // Main component for Chatbot Screen
+  const [messages, setMessages] = useState([  // State to hold chat messages, initialized with a welcome message
     {
-      id: '1',
-      text: "Hi! I'm your AI finance assistant. Ask me about your balance, spending, or get financial advice!",
-      isBot: true,
-      timestamp: new Date(),
+      id: '1',  // Unique ID for the message
+      text: "Hi! I'm your AI finance assistant. Ask me about your balance, spending, or get financial advice!", // Welcome message text
+      isBot: true,  // Flag to indicate message is from bot
+      timestamp: new Date(),  // Timestamp of the message
     },
   ]);
-  const [inputText, setInputText] = useState('');
-  const [loading, setLoading] = useState(false);
-  const flatListRef = useRef(null);
+  const [inputText, setInputText] = useState(''); // State to hold the current input text
+  const [loading, setLoading] = useState(false);  // State to manage loading indicator
+  const flatListRef = useRef(null); // Ref for FlatList to scroll to bottom
 
-  const quickMessages = [
+  const quickMessages = [ // Predefined quick message options
     "What's my balance? ",
     "How much did I spend? ",
     "Give me advice ",
     "Recent transactions ",
   ];
 
-  const sendMessage = async (text) => {
-    if (!text.trim()) return;
+  const sendMessage = async (text) => { // Function to send a message
+    if (!text.trim()) return; // Do nothing if input is empty
 
-    const userMessage = {
-      id: Date.now().toString(),
-      text: text,
-      isBot: false,
-      timestamp: new Date(),
+    const userMessage = { // Create user message object
+      id: Date.now().toString(),  // Unique ID based on timestamp
+      text: text, // Message text
+      isBot: false, // Flag to indicate message is from user
+      timestamp: new Date(),  // Timestamp of the message
     };
 
-    setMessages((prev) => [...prev, userMessage]);
-    setInputText('');
-    setLoading(true);
+    setMessages((prev) => [...prev, userMessage]);  // Append user message to messages state
+    setInputText(''); // Clear input field
+    setLoading(true); // Set loading state to true while processing
 
-    try {
-      const response = await processChatMessage(text);
+    try { // Try to process the chat message
+      const response = await processChatMessage(text);  // Call to service: Process user message and get bot response
       
-      const botMessage = {
-        id: (Date.now() + 1).toString(),
-        text: response,
-        isBot: true,
-        timestamp: new Date(),
+      const botMessage = {  // Create bot message object
+        id: (Date.now() + 1).toString(),  // Unique ID based on timestamp
+        text: response, // Bot response text
+        isBot: true,  // Flag to indicate message is from bot
+        timestamp: new Date(),  // Timestamp of the message
       };
 
-      setMessages((prev) => [...prev, botMessage]);
-    } catch (error) {
-      const errorMessage = {
-        id: (Date.now() + 1).toString(),
+      setMessages((prev) => [...prev, botMessage]); // Append bot message to messages state
+    } catch (error) { // Error handling: Show error message if processing fails
+      const errorMessage = {  // Create error message object
+        id: (Date.now() + 1).toString(),  // Unique ID based on timestamp
         text: "Sorry, I encountered an error. Please try again.",
-        isBot: true,
-        timestamp: new Date(),
+        isBot: true,  // Flag to indicate message is from bot
+        timestamp: new Date(),  // Timestamp of the message
       };
-      setMessages((prev) => [...prev, errorMessage]);
-    } finally {
-      setLoading(false);
+      setMessages((prev) => [...prev, errorMessage]); // Append error message to messages state
+    } finally { // Finally block to reset loading state
+      setLoading(false);  // Reset loading state
     }
   };
 
-  const renderMessage = ({ item }) => (
-    <View style={[styles.messageContainer, item.isBot ? styles.botMessage : styles.userMessage]}>
-      <Card style={[styles.messageCard, item.isBot ? styles.botCard : styles.userCard]}>
-        <Card.Content>
-          <Text style={item.isBot ? styles.botText : styles.userText}>{item.text}</Text>
+  const renderMessage = ({ item }) => ( // Function to render each chat message
+    <View style={[styles.messageContainer, item.isBot ? styles.botMessage : styles.userMessage]}> {/* Message container with conditional styling */}
+      <Card style={[styles.messageCard, item.isBot ? styles.botCard : styles.userCard]}>  {/* Card component with conditional styling */}
+        <Card.Content>  {/* Card content */}
+          <Text style={item.isBot ? styles.botText : styles.userText}>{item.text}</Text>  {/* Message text with conditional styling */}
         </Card.Content>
       </Card>
-      <Text style={styles.timestamp}>
-        {item.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+      <Text style={styles.timestamp}> {/* Timestamp text */}
+        {item.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} {/* Format timestamp to HH:MM */}
       </Text>
     </View>
   );
 
-  return (
-    <KeyboardAvoidingView
+  return (  // Main return statement rendering the Chatbot screen
+    /* KeyboardAvoidingView to manage keyboard behavior */
+    <KeyboardAvoidingView 
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={100}
     >
+      {/* FlatList to display chat messages */}
       <FlatList
         ref={flatListRef}
         data={messages}
@@ -88,7 +90,7 @@ export default function ChatbotScreen() {
         contentContainerStyle={styles.messagesList}
         onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
       />
-
+      {/* Quick message buttons */}
       <View style={styles.quickMessagesContainer}>
         {quickMessages.map((msg, index) => (
           <Chip
@@ -101,7 +103,7 @@ export default function ChatbotScreen() {
           </Chip>
         ))}
       </View>
-
+      {/* Input area for user messages */}
       <View style={styles.inputContainer}>
         <TextInput
           value={inputText}
@@ -124,7 +126,7 @@ export default function ChatbotScreen() {
     </KeyboardAvoidingView>
   );
 }
-
+// Style definitions for ChatbotScreen component
 const styles = StyleSheet.create({
   container: {
     flex: 1,

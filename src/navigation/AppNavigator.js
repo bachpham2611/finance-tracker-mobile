@@ -1,25 +1,26 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
-import { IconButton } from 'react-native-paper';
+import React from 'react';  // React library
+import { NavigationContainer } from '@react-navigation/native'; // Navigation container
+import { createStackNavigator } from '@react-navigation/stack'; // Stack navigator
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; // Bottom tab navigator
+import { Ionicons } from '@expo/vector-icons';  // Ionicons for tab icons
+import { IconButton } from 'react-native-paper';  // IconButton component for header buttons
 
-import LoginScreen from '../screens/LoginScreen';
-import RegisterScreen from '../screens/RegisterScreen';
-import DashboardScreen from '../screens/DashboardScreen';
-import TransactionsScreen from '../screens/TransactionsScreen';
-import AddTransactionScreen from '../screens/AddTransactionScreen';
-import ChatbotScreen from '../screens/ChatbotScreen';
+import LoginScreen from '../screens/LoginScreen'; // Login screen component
+import RegisterScreen from '../screens/RegisterScreen'; // Register screen component
+import DashboardScreen from '../screens/DashboardScreen'; // Dashboard screen component
+import TransactionsScreen from '../screens/TransactionsScreen'; // Transactions screen component
+import AddTransactionScreen from '../screens/AddTransactionScreen'; // Add/Edit Transaction screen component
+import ChatbotScreen from '../screens/ChatbotScreen'; // Chatbot screen component
 
-import { logoutUser } from '../services/authService';
+import { logoutUser } from '../services/authService'; // Service function to log out user
 
-const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator(); // Stack navigator instance
+const Tab = createBottomTabNavigator(); // Bottom tab navigator instance
 
-function AuthStack() {
-  return (
-    <Stack.Navigator>
+function AuthStack() {  // Authentication stack navigator
+  return (  // Main return statement rendering the Auth stack
+    /* Stack navigator for authentication screens */
+    <Stack.Navigator> 
       <Stack.Screen 
         name="Login" 
         component={LoginScreen}
@@ -40,8 +41,9 @@ function AuthStack() {
   );
 }
 
-function TransactionsStack() {
-  return (
+function TransactionsStack() {  // Stack navigator for Transactions screens
+  return (  // Main return statement rendering the Transactions stack
+    /* Stack navigator for Transactions screens */
     <Stack.Navigator>
       <Stack.Screen 
         name="TransactionsList" 
@@ -74,8 +76,9 @@ function TransactionsStack() {
   );
 }
 
-function MainTabs() {
-  return (
+function MainTabs() { // Main tab navigator for authenticated users
+  return (  // Main return statement rendering the main tab navigator
+    /* Bottom tab navigator for main app screens */
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
@@ -140,8 +143,9 @@ function MainTabs() {
   );
 }
 
-export default function AppNavigator({ isAuthenticated }) {
-  return (
+export default function AppNavigator({ isAuthenticated }) { // Main app navigator component
+  return (  // Main return statement rendering the app navigator
+    /* Navigation container managing app navigation */
     <NavigationContainer>
       {isAuthenticated ? <MainTabs /> : <AuthStack />}
     </NavigationContainer>

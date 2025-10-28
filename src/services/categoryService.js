@@ -1,4 +1,4 @@
-const defaultCategories = [
+const defaultCategories = [ // Predefined list of default categories
   { id: '1', name: 'Food & Dining', type: 'expense', icon: '🍔', color: '#ef4444' },
   { id: '2', name: 'Transportation', type: 'expense', icon: '🚗', color: '#f59e0b' },
   { id: '3', name: 'Entertainment', type: 'expense', icon: '🎬', color: '#8b5cf6' },
@@ -10,10 +10,10 @@ const defaultCategories = [
   { id: '9', name: 'Investment', type: 'income', icon: '📈', color: '#059669' },
 ];
 
-export const getCategories = () => {
-  return defaultCategories;
+export const getCategories = () => {  // Function to get all default categories
+  return defaultCategories; // Return the full list of default categories
 };
 
-export const getCategoriesByType = (type) => {
-  return defaultCategories.filter(cat => cat.type === type);
+export const getCategoriesByType = (type) => {  // Function to get categories filtered by type
+  return defaultCategories.filter(cat => cat.type === type);  // Return categories matching the specified type
 };
